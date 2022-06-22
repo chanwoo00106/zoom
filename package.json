@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --exec ts-node \"src/server.ts\""
+    "dev": "nodemon --ignore \"src/public/\" --exec ts-node \"src/server.ts\""
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",
