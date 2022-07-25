@@ -12,13 +12,16 @@ app.get("/", (_, res) => res.render("home"));
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+const sockets: WebSocket.WebSocket[] = [];
+
 wss.on("connection", (socket) => {
+  sockets.push(socket);
+
   console.log(`Connected to Browser`);
-  socket.send("hello");
 
   socket.on("close", () => console.log("Disconnected from the Browser X"));
   socket.on("message", (message) => {
-    console.log(message.toString());
+    sockets.forEach((s) => s.send(message.toString()));
   });
 });
 
