@@ -16,12 +16,16 @@ const sockets: WebSocket.WebSocket[] = [];
 
 wss.on("connection", (socket) => {
   sockets.push(socket);
+  socket["nickname"] = "Anon";
 
   console.log(`Connected to Browser`);
 
   socket.on("close", () => console.log("Disconnected from the Browser X"));
   socket.on("message", (message) => {
-    sockets.forEach((s) => s.send(message.toString()));
+    const data = JSON.parse(message.toString());
+    if (data.type === "message")
+      sockets.forEach((s) => s.send(`${socket["nickname"]}: ${data.payload}`));
+    else if (data.type === "nickname") socket["nickname"] = data.payload;
   });
 });
 
