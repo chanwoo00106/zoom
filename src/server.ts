@@ -13,7 +13,9 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 io.on("connection", (socket) => {
-  console.log(socket);
+  socket.on("enter_room", (msg) => {
+    console.log(msg);
+  });
 });
 
 // const sockets: WebSocket.WebSocket[] = [];
