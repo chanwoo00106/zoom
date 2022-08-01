@@ -18,7 +18,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("enter_room", (roomName) => {
-    socket.join(roomName);
+    socket.join(roomName.toString());
+    socket.to(roomName.toString()).emit("welcome");
   });
 });
 
