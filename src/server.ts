@@ -13,21 +13,30 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 io.on("connection", (socket) => {
+  socket["nickname"] = "Anon";
   socket.onAny((event) => {
     console.log(`Socket Event : ${event}`);
   });
 
   socket.on("enter_room", (roomName) => {
     socket.join(roomName.payload);
-    socket.to(roomName.payload).emit("welcome");
+    socket.to(roomName.payload).emit("welcome", socket["nickname"]);
   });
 
   socket.on("disconnecting", () => {
-    socket.rooms.forEach((room) => socket.to(room).emit("bye"));
+    socket.rooms.forEach((room) =>
+      socket.to(room).emit("bye", socket["nickname"])
+    );
   });
 
   socket.on("new_message", (msg, room) => {
-    socket.to(room.toString()).emit("new_message", msg);
+    socket
+      .to(room.toString())
+      .emit("new_message", `${socket["nickname"]}: ${msg}`);
+  });
+
+  socket.on("nickname", (nickname) => {
+    socket["nickname"] = nickname;
   });
 });
 
