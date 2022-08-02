@@ -18,26 +18,18 @@ io.on("connection", (socket) => {
   });
 
   socket.on("enter_room", (roomName) => {
-    socket.join(roomName.toString());
-    socket.to(roomName.toString()).emit("welcome");
+    socket.join(roomName.payload);
+    socket.to(roomName.payload).emit("welcome");
+  });
+
+  socket.on("disconnecting", () => {
+    socket.rooms.forEach((room) => socket.to(room).emit("bye"));
+  });
+
+  socket.on("new_message", (msg, room) => {
+    socket.to(room.toString()).emit("new_message", msg);
   });
 });
-
-// const sockets: WebSocket.WebSocket[] = [];
-// wss.on("connection", (socket) => {
-//   sockets.push(socket);
-//   socket["nickname"] = "Anon";
-//
-//   console.log(`Connected to Browser`);
-//
-//   socket.on("close", () => console.log("Disconnected from the Browser X"));
-//   socket.on("message", (message) => {
-//     const data = JSON.parse(message.toString());
-//     if (data.type === "message")
-//       sockets.forEach((s) => s.send(`${socket["nickname"]}: ${data.payload}`));
-//     else if (data.type === "nickname") socket["nickname"] = data.payload;
-//   });
-// });
 
 server.listen(3000, () => {
   console.log("Listening on http://localhost:3000");

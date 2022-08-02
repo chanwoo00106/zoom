@@ -19,6 +19,14 @@ const showRoom = () => {
   welcome.hidden = true;
   room.hidden = false;
   room.querySelector("h3").innerText = `Room ${roomName}`;
+
+  room.querySelector("form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const input = room.querySelector("input");
+    socket.emit("new_message", input.value, roomName);
+    addMessage(`You: ${input.value}`);
+    input.value = "";
+  });
 };
 
 form.addEventListener("submit", (e) => {
@@ -35,3 +43,9 @@ form.addEventListener("submit", (e) => {
 socket.on("welcome", () => {
   addMessage("Someone joined");
 });
+
+socket.on("bye", () => {
+  addMessage("someone left");
+});
+
+socket.on("new_message", addMessage);
