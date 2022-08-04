@@ -30,6 +30,7 @@ const publicRooms = () => {
 
 io.on("connection", (socket) => {
   socket["nickname"] = "Anon";
+  io.sockets.emit("room_change", publicRooms());
   socket.onAny((event) => {
     console.log(`Socket Event : ${event}`);
   });
@@ -37,12 +38,18 @@ io.on("connection", (socket) => {
   socket.on("enter_room", (roomName) => {
     socket.join(roomName.payload);
     socket.to(roomName.payload).emit("welcome", socket["nickname"]);
+
+    io.sockets.emit("room_change", publicRooms());
   });
 
   socket.on("disconnecting", () => {
     socket.rooms.forEach((room) =>
       socket.to(room).emit("bye", socket["nickname"])
     );
+  });
+
+  socket.on("disconnect", () => {
+    io.sockets.emit("room_change", publicRooms());
   });
 
   socket.on("new_message", (msg, room) => {
