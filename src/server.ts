@@ -12,6 +12,22 @@ app.get("/", (_, res) => res.render("home"));
 const server = http.createServer(app);
 const io = new Server(server);
 
+const publicRooms = () => {
+  const {
+    sockets: {
+      adapter: { sids, rooms },
+    },
+  } = io;
+
+  const publicRooms = [];
+
+  rooms.forEach((_, key) => {
+    if (sids.get(key) === undefined) publicRooms.push(key);
+  });
+
+  return publicRooms;
+};
+
 io.on("connection", (socket) => {
   socket["nickname"] = "Anon";
   socket.onAny((event) => {
