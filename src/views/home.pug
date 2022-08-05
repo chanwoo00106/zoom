@@ -10,7 +10,10 @@ html(lang="en")
     header
       h1 Goom
     main
-      
+      div#myStream
+        video#myFace(autoplay,playsinline, width="400", heigth="400")
+        button#mute Unmute
+        button#camerra Turn Camerra On
 
     script(src="/socket.io/socket.io.js")
     script(src="/public/js/app.js")
