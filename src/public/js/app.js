@@ -2,19 +2,34 @@ const socket = io();
 
 const myFace = document.querySelector("#myFace");
 const muteBtn = document.querySelector("#mute");
-const camerraBtn = document.querySelector("#camerra");
+const cameraBtn = document.querySelector("#camera");
+const cameraSelect = document.querySelector("#cameras");
 
 let myStream;
 let muted = false;
-let camerraOff = false;
+let cameraOff = false;
+
+async function getCameras() {
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const cameras = devices.filter((device) => device.kind === "videoinput");
+    cameras.forEach((camera) => {
+      const option = document.createElement("option");
+      option.value = camera.deviceId;
+      option.innerText = camera.label;
+      cameraSelect.append(option);
+    });
+  } catch (e) {}
+}
 
 async function getMedia() {
   try {
     myStream = await navigator.mediaDevices.getUserMedia({
-      audio: muted,
-      video: camerraOff,
+      audio: true,
+      video: true,
     });
     myFace.srcObject = myStream;
+    await getCameras();
   } catch (e) {
     console.log(e);
   }
@@ -23,12 +38,17 @@ async function getMedia() {
 getMedia();
 
 muteBtn.addEventListener("click", () => {
+  myStream
+    .getAudioTracks()
+    .forEach((track) => (track.enabled = !track.enabled));
+
   muted = !muted;
   muteBtn.innerText = muted ? "Mute" : "Unmute";
-  getMedia();
 });
-camerraBtn.addEventListener("click", () => {
-  camerraOff = !camerraOff;
-  camerraBtn.innerText = camerraOff ? "Turn Camerra Off" : "Turn Camerra On";
-  getMedia();
+cameraBtn.addEventListener("click", () => {
+  myStream
+    .getVideoTracks()
+    .forEach((track) => (track.enabled = !track.enabled));
+  cameraOff = !cameraOff;
+  cameraBtn.innerText = cameraOff ? "Turn camera Off" : "Turn camera On";
 });
