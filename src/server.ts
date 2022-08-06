@@ -12,6 +12,14 @@ app.get("/", (_, res) => res.render("home"));
 const server = http.createServer(app);
 const io = new Server(server);
 
+io.on("connection", (socket) => {
+  socket.on("join_room", (roomName, done) => {
+    socket.join(roomName);
+    done();
+    socket.to(roomName).emit("welcome");
+  });
+});
+
 server.listen(3000, () => {
   console.log("Listening on http://localhost:3000");
 });

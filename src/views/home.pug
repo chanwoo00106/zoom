@@ -10,11 +10,16 @@ html(lang="en")
     header
       h1 Goom
     main
-      div#myStream
-        video#myFace(autoplay,playsinline, width="400", heigth="400")
-        button#mute Unmute
-        button#camera Turn Camera On
-        select#cameras
+      div#welcome
+        form
+          input(placeholder="room name", type="text", required)
+          button Enter room
+      div#call
+        div#myStream
+          video#myFace(autoplay,playsinline, width="400", heigth="400")
+          button#mute Unmute
+          button#camera Turn Camera On
+          select#cameras
 
     script(src="/socket.io/socket.io.js")
     script(src="/public/js/app.js")
