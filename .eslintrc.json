@@ -1,8 +1,7 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["import", "@typescript-eslint", "prettier"],
+  "plugins": ["import", "@typescript-eslint"],
   "extends": [
-    "airbnb-base",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:@typescript-eslint/recommended",
@@ -18,7 +17,7 @@
   },
   "ignorePatterns": ["node_modules/"],
   "rules": {
-    "prettier/prettier": "error",
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "import/extensions": [
       "error",
       "ignorePackages",
