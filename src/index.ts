@@ -1,18 +1,20 @@
-import express from "express";
-import { createServer } from "http";
+import http from "http";
 import { Server } from "socket.io";
+import express from "express";
 
 const app = express();
 
-app.use(express.static(__dirname + "/public"));
-app.set("view engine", "ejs");
+app.set("view engine", "pug");
 app.set("views", __dirname + "/views");
+app.use(express.static(__dirname + "/public"));
+app.get("/", (_, res) => res.render("index"));
 
-const httpServer = createServer(app);
-const io = new Server(httpServer);
+const httpServer = http.createServer(app);
+const wsServer = new Server(httpServer);
 
-app.get("/*", (_, res) => {
-  res.render("index.ejs");
+wsServer.on("connection", (socket) => {
+  console.log(socket);
 });
 
-app.listen(8080, () => console.log("http://localhost:8080"));
+const handleListen = () => console.log(`Listening on http://localhost:3000`);
+httpServer.listen(3000, handleListen);
