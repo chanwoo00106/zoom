@@ -1,8 +1,12 @@
-// const socket = io();
+const socket = io();
 
 const myFace = document.getElementById("myFace");
+const muteBtn = document.querySelector("#mute");
+const cameraBtn = document.querySelector("#camera");
 
 let myStream;
+let muted = false;
+let cameraOff = false;
 
 async function getMedia() {
   try {
@@ -15,3 +19,14 @@ async function getMedia() {
 }
 
 getMedia();
+
+muteBtn.addEventListener("click", () => {
+  if (muted) muteBtn.innerText = "Mute";
+  else muteBtn.innerText = "UnMute";
+  muted = !muted;
+});
+cameraBtn.addEventListener("click", () => {
+  if (cameraOff) cameraBtn.innerText = "Turn Camera On";
+  else cameraBtn.innerHTML = "Turn Camera Off";
+  cameraOff = !cameraOff;
+});
